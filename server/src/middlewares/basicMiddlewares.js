@@ -44,19 +44,16 @@ module.exports.canGetContest = async (req, res, next) => {
 
 module.exports.onlyForCreative = (req, res, next) => {
   if (req.tokenData.role === CONSTANTS.CUSTOMER) {
-    next(new RightsError());
-  } else {
-    next();
+    return next(new RightsError());
   }
-
+  next();
 };
 
 module.exports.onlyForCustomer = (req, res, next) => {
   if (req.tokenData.role === CONSTANTS.CREATOR) {
     return next(new RightsError('this page only for customers'));
-  } else {
-    next();
   }
+  next();
 };
 
 module.exports.canSendOffer = async (req, res, next) => {
