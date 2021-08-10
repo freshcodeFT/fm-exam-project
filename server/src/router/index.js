@@ -12,7 +12,6 @@ const router = express.Router();
 router.post(
   '/registration',
   validators.validateRegistrationData,
-  hashPass,
   userController.registration,
 );
 
