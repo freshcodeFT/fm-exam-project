@@ -1,3 +1,4 @@
+const {promisify} = require('util');
 const createHttpError = require('http-errors');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
@@ -8,6 +9,8 @@ const {
   REFRESH_TOKEN_TIME,
   MAX_DEVICE_AMOUNT,
 } = require('../constants');
+
+const signJWT = promisify(jwt.sign);
 
 module.exports.signIn = async (req, res, next) => {
   try {
@@ -22,7 +25,7 @@ module.exports.signIn = async (req, res, next) => {
 
     if (user && (await user.comparePassword(password))) {
       /* Create tokenPair */
-      const accessToken = jwt.sign(
+      const accessToken = await signJWT(
         {
           userId: user.id,
           email: user.email,
@@ -34,7 +37,7 @@ module.exports.signIn = async (req, res, next) => {
         },
       );
 
-      const refreshToken = jwt.sign(
+      const refreshToken = await signJWT(
         {
           userId: user.id,
           email: user.email,
@@ -74,7 +77,51 @@ module.exports.signUp = async (req, res, next) => {
   try {
     const { body } = req;
     const user = await User.create(body);
-    //...
+    if (user) {
+      /* Create tokenPair */
+      const accessToken = await signJWT(
+        {
+          userId: user.id,
+          email: user.email,
+          role: user.role,
+        },
+        ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: ACCESS_TOKEN_TIME,
+        },
+      );
+
+      const refreshToken = await signJWT(
+        {
+          userId: user.id,
+          email: user.email,
+          role: user.role,
+        },
+        REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: REFRESH_TOKEN_TIME,
+        },
+      );
+      if ((await user.countRefreshTokens()) >= MAX_DEVICE_AMOUNT) {
+        const [oldestToken] = await user.getRefreshTokens({
+          order: [['updatedAt', 'ASC']],
+          limit: 1,
+        });
+        await oldestToken.update({ value: refreshToken, ua: userAgent });
+      } else {
+        await user.createRefreshToken({ value: refreshToken, ua: userAgent });
+      }
+      res.send({
+        data: {
+          user,
+          tokenPair: {
+            access: accessToken,
+            refresh: refreshToken,
+          },
+        },
+      });
+    }
+    next(createHttpError(406, 'User already exists'));
   } catch (error) {
     next(error);
   }
