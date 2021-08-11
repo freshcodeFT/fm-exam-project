@@ -1,13 +1,15 @@
 const express = require('express');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
-const hashPass = require('../middlewares/hashPassMiddle');
 const userController = require('../controllers/userController');
 const contestController = require('../controllers/contestController');
 const checkToken = require('../middlewares/checkToken');
 const validators = require('../middlewares/validators');
 const chatController = require('../controllers/chatController');
 const upload = require('../utils/fileUpload');
+const authRouter = require('./auth');
 const router = express.Router();
+
+router.use('/auth', authRouter);
 
 router.post(
   '/registration',
@@ -15,11 +17,7 @@ router.post(
   userController.registration,
 );
 
-router.post(
-  '/login',
-  validators.validateLogin,
-  userController.login,
-);
+router.post('/login', validators.validateLogin, userController.login);
 
 router.post(
   '/dataForContest',
@@ -57,10 +55,7 @@ router.post(
   contestController.getContests,
 );
 
-router.post(
-  '/getUser',
-  checkToken.checkAuth,
-);
+router.post('/getUser', checkToken.checkAuth);
 
 router.get(
   '/downloadFile/:fileName',
@@ -111,35 +106,15 @@ router.post(
   userController.cashout,
 );
 
-router.post(
-  '/newMessage',
-  checkToken.checkToken,
-  chatController.addMessage,
-);
+router.post('/newMessage', checkToken.checkToken, chatController.addMessage);
 
-router.post(
-  '/getChat',
-  checkToken.checkToken,
-  chatController.getChat,
-);
+router.post('/getChat', checkToken.checkToken, chatController.getChat);
 
-router.post(
-  '/getPreview',
-  checkToken.checkToken,
-  chatController.getPreview,
-);
+router.post('/getPreview', checkToken.checkToken, chatController.getPreview);
 
-router.post(
-  '/blackList',
-  checkToken.checkToken,
-  chatController.blackList,
-);
+router.post('/blackList', checkToken.checkToken, chatController.blackList);
 
-router.post(
-  '/favorite',
-  checkToken.checkToken,
-  chatController.favoriteChat,
-);
+router.post('/favorite', checkToken.checkToken, chatController.favoriteChat);
 
 router.post(
   '/createCatalog',
@@ -171,10 +146,6 @@ router.post(
   chatController.deleteCatalog,
 );
 
-router.post(
-  '/getCatalogs',
-  checkToken.checkToken,
-  chatController.getCatalogs,
-);
+router.post('/getCatalogs', checkToken.checkToken, chatController.getCatalogs);
 
 module.exports = router;
