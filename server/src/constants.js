@@ -23,7 +23,7 @@ module.exports = {
   REFRESH_TOKEN_SECRET,
   REFRESH_TOKEN_TIME,
   MAX_DEVICE_AMOUNT,
-  SALT_ROUNDS,
+  SALT_ROUNDS: Number(SALT_ROUNDS),
   CUSTOMER: 'customer',
   CREATOR: 'creator',
   CREATOR_ENTRIES: 'creator_entries',

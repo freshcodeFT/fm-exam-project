@@ -1,11 +1,11 @@
-'use strict'
-const { Model } = require('sequelize')
+'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class RefreshToken extends Model {
     static associate ({ User }) {
       RefreshToken.belongsTo(User, {
-        foreignKey: 'userId'
-      })
+        foreignKey: 'userId',
+      });
     }
   }
   RefreshToken.init(
@@ -17,31 +17,39 @@ module.exports = (sequelize, DataTypes) => {
           model: 'Users',
           key: 'id',
           onUpdate: 'cascade',
-          onDelete: 'cascade'
+          onDelete: 'cascade',
         },
         validate: {
-          isNull: false
-        }
+          notNull: true,
+        },
       },
       value: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-          isNull: false
-        }
+          notNull: true,
+        },
       },
       ua: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isNull: true,
+        },
       },
       fingerprint: {
-        type: DataTypes.STRING
-      }
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isNull: true,
+        },
+      },
     },
     {
       sequelize,
       modelName: 'RefreshToken',
-      tableName: 'refresh_tokens'
-    }
-  )
-  return RefreshToken
-}
+      tableName: 'refresh_tokens',
+    },
+  );
+  return RefreshToken;
+};

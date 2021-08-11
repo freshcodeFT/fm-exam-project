@@ -12,7 +12,6 @@ module.exports.createSession = async user => {
   } else {
     await user.createRefreshToken({
       value: tokenPair.refresh,
-      ua: userAgent,
     });
   }
 
