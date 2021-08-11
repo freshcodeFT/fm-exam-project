@@ -14,7 +14,6 @@ async function hashPassword (user, options) {
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate (models) {
-      User.hasMany(models.Order, { foreignKey: 'userId', targetKey: 'id' });
       User.hasMany(models.Offer, { foreignKey: 'userId', targetKey: 'id' });
       User.hasMany(models.RefreshToken, {
         foreignKey: 'userId',
