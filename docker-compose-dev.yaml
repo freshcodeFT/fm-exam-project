@@ -18,6 +18,7 @@ services:
   server-dev:
     build:
       context: ./server
+      dockerfile: Dockerfile
 
     environment:
       NODE_ENV: development

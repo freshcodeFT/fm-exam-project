@@ -2,7 +2,8 @@ const express = require('express');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const userController = require('../controllers/userController');
 const contestController = require('../controllers/contestController');
-const checkToken = require('../middlewares/checkToken');
+const checkToken = require('../middlewares/checkToken')
+const TokenMW = require('../middlewares/tokenMW');
 const validators = require('../middlewares/validators');
 const chatController = require('../controllers/chatController');
 const upload = require('../utils/fileUpload');
@@ -20,7 +21,7 @@ router.post(
 router.post('/login', validators.validateLogin, userController.login);
 */
 
-router.use(checkToken.checkToken);
+router.use(TokenMW.checkAccessToken);
 
 router.post('/dataForContest', contestController.dataForContest);
 
