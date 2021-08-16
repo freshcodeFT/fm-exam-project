@@ -8,7 +8,7 @@ module.exports.createSession = async user => {
       order: [['updatedAt', 'ASC']],
       limit: 1,
     });
-    await oldestToken.update({ value: tokenPair.refresh, ua: userAgent });
+    await oldestToken.update({ value: tokenPair.refresh });
   } else {
     await user.createRefreshToken({
       value: tokenPair.refresh,

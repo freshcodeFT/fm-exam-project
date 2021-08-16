@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.css'
@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard/Dashboard'
 import PrivateHoc from './components/PrivateHoc/PrivateHoc'
 import NotFound from './components/NotFound/NotFound'
 import Home from './pages/Home/Home'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import OnlyNotAuthorizedUserHoc from './components/OnlyNotAuthorizedUserHoc/OnlyNotAuthorizedUserHoc'
 import ContestPage from './pages/ContestPage/ContestPage'
 import UserProfile from './pages/UserProfile/UserProfile'
@@ -24,7 +25,7 @@ import { authActionRefresh } from './actions/actionCreator'
 function App () {
   const dispatch = useDispatch()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const refreshToken = window.localStorage.getItem(CONSTANTS.REFRESH_TOKEN)
     if (refreshToken) {
       dispatch(authActionRefresh(refreshToken))
@@ -55,39 +56,52 @@ function App () {
           path='/registration'
           component={OnlyNotAuthorizedUserHoc(RegistrationPage)}
         />
-        <Route exact path='/payment' component={PrivateHoc(Payment)} />
-        <Route
+        {/*<Route exact path='/payment' component={PrivateHoc(Payment)} />*/}
+        <PrivateRoute
+          roles={['customer']}
+          exact
+          path='/payment'
+          component={Payment}
+        />
+        <PrivateRoute
+          roles={['customer']}
           exact
           path='/startContest'
-          component={PrivateHoc(StartContestPage)}
+          component={StartContestPage}
         />
-        <Route
+        <PrivateRoute
+          roles={['customer']}
           exact
           path='/startContest/nameContest'
-          component={PrivateHoc(ContestCreationPage, {
-            contestType: CONSTANTS.NAME_CONTEST,
-            title: 'Company Name'
-          })}
-        />
-        <Route
+        >
+          <ContestCreationPage
+            contestType={CONSTANTS.NAME_CONTEST}
+            title='Company Name'
+          />
+        </PrivateRoute>
+        <PrivateRoute
+          roles={['customer']}
           exact
           path='/startContest/taglineContest'
-          component={PrivateHoc(ContestCreationPage, {
-            contestType: CONSTANTS.TAGLINE_CONTEST,
-            title: 'TAGLINE'
-          })}
-        />
-        <Route
+        >
+          <ContestCreationPage
+            contestType={CONSTANTS.TAGLINE_CONTEST}
+            title='TAGLINE'
+          />
+        </PrivateRoute>
+        <PrivateRoute
+          roles={['customer']}
           exact
           path='/startContest/logoContest'
-          component={PrivateHoc(ContestCreationPage, {
-            contestType: CONSTANTS.LOGO_CONTEST,
-            title: 'LOGO'
-          })}
-        />
-        <Route exact path='/dashboard' component={PrivateHoc(Dashboard)} />
-        <Route exact path='/contest/:id' component={PrivateHoc(ContestPage)} />
-        <Route exact path='/account' component={PrivateHoc(UserProfile)} />
+        >
+          <ContestCreationPage
+            contestType={CONSTANTS.LOGO_CONTEST}
+            title='LOGO'
+          />
+        </PrivateRoute>
+        <PrivateRoute roles={['customer', 'creator']} exact path='/dashboard' component={Dashboard} />
+        <PrivateRoute roles={['customer', 'creator']} exact path='/contest/:id' component={ContestPage} />
+        <PrivateRoute roles={['customer', 'creator']} exact path='/account' component={UserProfile} />
         <Route component={NotFound} />
       </Switch>
       <ChatContainer />

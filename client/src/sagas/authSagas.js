@@ -11,7 +11,7 @@ export function * loginSaga (action) {
       }
     } = yield Api.auth.login(action.data)
     action.history.replace('/')
-    yield put({ type: ACTION.GET_USER_SUCCESS, user })
+    yield put({ type: ACTION.GET_USER_SUCCESS, data: user })
   } catch (err) {
     yield put({ type: ACTION.AUTH_ACTION_ERROR, error: err.response })
   }
