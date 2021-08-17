@@ -87,7 +87,7 @@ class Header extends React.Component {
       return null
     }
     return (
-      <div className={styles.headerContainer}>
+      <header className={styles.headerContainer}>
         <div className={styles.fixedHeader}>
           <span className={styles.info}>
             Squadhelp recognized as one of the Most Innovative Companies by Inc
@@ -104,7 +104,7 @@ class Header extends React.Component {
             {this.renderLoginButtons()}
           </div>
         </div>
-        <div className={styles.navContainer}>
+        <nav className={styles.navContainer}>
           <Link to='/'>
             <img
               src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
@@ -257,8 +257,8 @@ class Header extends React.Component {
               </Link>
             )}
           </div>
-        </div>
-      </div>
+        </nav>
+      </header>
     )
   }
 }

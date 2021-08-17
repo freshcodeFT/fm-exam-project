@@ -4,13 +4,16 @@ export const registerRequest = data => httpClient.post('registration', data)
 export const loginRequest = data => httpClient.post('login', data)
 */
 export const getUser = () => httpClient.post('getUser')
+export const updateUser = data => httpClient.post('updateUser', data)
+
 
 export const setNewOffer = data => httpClient.post('setNewOffer', data)
 export const setOfferStatus = data => httpClient.post('setOfferStatus', data)
-export const payMent = data => httpClient.post('pay', data.formData)
 export const changeMark = data => httpClient.post('changeMark', data)
+
+
 export const cashOut = data => httpClient.post('cashout', data)
-export const updateUser = data => httpClient.post('updateUser', data)
+export const payMent = data => httpClient.post('pay', data.formData)
 
 
 export const getPreviewChat = () => httpClient.post('getPreview')
