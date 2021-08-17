@@ -26,7 +26,7 @@ export function * registerSaga (action) {
       }
     } = yield Api.auth.signup(action.data)
     action.history.replace('/')
-    yield put({ type: ACTION.GET_USER_SUCCESS, user })
+    yield put({ type: ACTION.GET_USER_SUCCESS, data: user })
   } catch (e) {
     yield put({ type: ACTION.AUTH_ACTION_ERROR, error: e.response })
   }

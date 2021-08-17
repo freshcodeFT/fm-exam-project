@@ -1,44 +1,59 @@
-import React from 'react';
-import { toast } from 'react-toastify';
-import WebSocket from './WebSocket';
-import Notification from '../../../components/Notification/Notification';
+import React from 'react'
+import { toast } from 'react-toastify'
+import WebSocket from './WebSocket'
+import Notification from '../../../components/Notification/Notification'
 
 class NotificationSocket extends WebSocket {
-  constructor(dispatch, getState, room) {
-    super(dispatch, getState, room);
+  constructor (dispatch, getState, room) {
+    super(dispatch, getState, room)
   }
 
-    anotherSubscribes = () => {
-      this.onEntryCreated();
-      this.onChangeMark();
-      this.onChangeOfferStatus();
-    };
+  anotherSubscribes = () => {
+    this.onEntryCreated()
+    this.onChangeMark()
+    this.onChangeOfferStatus()
+    this.onNewMessage()
+  }
 
-    onChangeMark = () => {
-      this.socket.on('changeMark', () => {
-        toast('Someone liked your offer');
-      });
-    };
+  onNewMessage = () => {
+    this.socket.on('notificationNewMessage', sender => {
+      const {
+        chatStore: { chatData }
+      } = this.getState()
+      console.log(sender)
+      if (!chatData || (chatData && chatData._id !== sender.dialogId)) {
+        toast(`You have new message from ${sender.firstName} ${sender.lastName}`)
+      }
+    })
+  }
 
-    onChangeOfferStatus = () => {
-      this.socket.on('changeOfferStatus', (message) => {
-        toast(<Notification message={message.message} contestId={message.contestId} />);
-      });
-    };
+  onChangeMark = () => {
+    this.socket.on('changeMark', () => {
+      toast('Someone liked your offer')
+    })
+  }
 
-    onEntryCreated = () => {
-      this.socket.on('onEntryCreated', () => {
-        toast('New Entry');
-      });
-    };
+  onChangeOfferStatus = () => {
+    this.socket.on('changeOfferStatus', message => {
+      toast(
+        <Notification message={message.message} contestId={message.contestId} />
+      )
+    })
+  }
 
-    subscribe = (id) => {
-      this.socket.emit('subscribe', id);
-    };
+  onEntryCreated = () => {
+    this.socket.on('onEntryCreated', () => {
+      toast('New Entry')
+    })
+  }
 
-    unsubsctibe = (id) => {
-      this.socket.emit('unsubscribe', id);
-    }
+  subscribe = id => {
+    this.socket.emit('subscribe', id)
+  }
+
+  unsubsctibe = id => {
+    this.socket.emit('unsubscribe', id)
+  }
 }
 
-export default NotificationSocket;
+export default NotificationSocket

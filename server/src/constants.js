@@ -44,6 +44,7 @@ module.exports = {
   NOTIFICATION_ENTRY_CREATED: 'onEntryCreated',
   NOTIFICATION_CHANGE_MARK: 'changeMark',
   NOTIFICATION_CHANGE_OFFER_STATUS: 'changeOfferStatus',
+  NOTIFICATION_NEW_MESSAGE: 'notificationNewMessage',
   NEW_MESSAGE: 'newMessage',
   CHANGE_BLOCK_STATUS: 'CHANGE_BLOCK_STATUS',
 };

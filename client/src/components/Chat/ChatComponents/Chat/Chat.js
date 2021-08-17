@@ -11,7 +11,7 @@ import {
   clearChatError,
   getPreviewChat,
 } from '../../../../actions/actionCreator';
-import { chatController } from '../../../../api/ws/socketController';
+import { controller, chatController } from '../../../../api/ws/socketController';
 import CONSTANTS from '../../../../constants';
 import CatalogListContainer from '../../CatalogComponents/CatalogListContainer/CatalogListContainer';
 import CatalogCreation from '../../CatalogComponents/CatalogCreation/CatalogCreation';
@@ -20,11 +20,13 @@ import ChatError from '../../../ChatError/ChatError';
 
 class Chat extends React.Component {
   componentDidMount() {
+    controller.subscribe(this.props.auth.data.id);
     chatController.subscribeChat(this.props.auth.data.id);
     this.props.getPreviewChat();
   }
 
   componentWillUnmount() {
+    controller.unsubsctibe(this.props.auth.data.id);
     chatController.unsubscribeChat(this.props.auth.data.id);
   }
 

@@ -1,7 +1,12 @@
 const WebSocket = require('./WebSocket');
 const CONSTANTS = require('../../constants');
 
-class NotificationController extends WebSocket{
+class NotificationController extends WebSocket {
+  emitNewMessage ({ interlocutorId, sender, dialogId }) {
+    this.io
+      .to(interlocutorId)
+      .emit(CONSTANTS.NOTIFICATION_NEW_MESSAGE, { ...sender, dialogId });
+  }
 
   emitEntryCreated (target) {
     this.io.to(target).emit(CONSTANTS.NOTIFICATION_ENTRY_CREATED);
@@ -12,8 +17,9 @@ class NotificationController extends WebSocket{
   }
 
   emitChangeOfferStatus (target, message, contestId) {
-    this.io.to(target).emit(CONSTANTS.NOTIFICATION_CHANGE_OFFER_STATUS,
-      { message, contestId });
+    this.io
+      .to(target)
+      .emit(CONSTANTS.NOTIFICATION_CHANGE_OFFER_STATUS, { message, contestId });
   }
 }
 
